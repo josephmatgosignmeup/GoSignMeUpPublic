@@ -547,7 +547,8 @@ namespace Gsmu.Api.Integration.Canvas
                         case GsmuEntityType.Student:
                             var student = SynchronizeStudent(canvasUser);
 
-                            SynchronizeCourseRoster(enrollment, gsmuCourse, student);
+                            if(student!=null)
+                                SynchronizeCourseRoster(enrollment, gsmuCourse, student);
 
                             break;
 
