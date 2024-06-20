@@ -1,12 +1,13 @@
 ﻿@{
     ViewBag.Title = "Account Recovery for " + ViewBag.Type_Text;
+    string passwordFormat = System.Configuration.ConfigurationManager.AppSettings["PasswordFormat"];
 }
 
-@if(ViewBag.tokenstatus =="validtoken"){
+@if (ViewBag.tokenstatus =="validtoken"){
 
     var resettoken = Request.QueryString["resettoken"];
     var username = Request.QueryString["username"];
-    var stype = Request.QueryString["stype"];   
+    var stype = Request.QueryString["stype"];
 
 @Scripts.Render("~/Areas/Public/Scripts/ExtFieldValidation.js")
 <script type="text/javascript">
@@ -60,7 +61,7 @@
                 customizedvalidation:true,
                 validator: function(value){
                     var field = Ext.getCmp('firstpasswordResetPass');
-                    return checkPasswordFormat(field.getValue(), field, 'reset');
+                    return checkPasswordFormat(field.getValue(), field, 'reset','@passwordFormat');
                 }
             }, {
                 xtype: 'displayfield', //for displaying custom error

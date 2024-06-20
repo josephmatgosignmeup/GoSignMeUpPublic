@@ -83,11 +83,16 @@ namespace Gsmu.Api.Data.School.Student
                 return student;
             }
         }
-        public static Gsmu.Api.Data.School.Entities.Student GetStudent(string userName)
+        public static Gsmu.Api.Data.School.Entities.Student GetStudent(string userName, bool fromAuthentication=false)
         {
             using (var db = new SchoolEntities())
             {
                 var student = (from s in db.Students where s.USERNAME == userName select s).FirstOrDefault();
+                if (fromAuthentication)
+                {
+                    student.InActive = 0;
+                    db.SaveChanges();
+                }
                 return student;
             }
         }

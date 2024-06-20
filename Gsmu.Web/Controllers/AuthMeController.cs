@@ -438,14 +438,14 @@ namespace Gsmu.Web.Controllers
                         {
                             if (supervisor.ACTIVE != 1)
                             {
-                                supervisor = null;
+                                supervisor.ACTIVE = 1;
                             }
                         }
                         if (student != null)
                         {
                             if (student.InActive != 0)
                             {
-                                student = null;
+                                student.InActive=0;
                             }
                         }
                         if (student == null && supervisor != null && instructor ==  null)

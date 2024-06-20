@@ -111,7 +111,7 @@
 
     </div>
     <div id="CourseNameDescContainerDesc" style="padding: 10px; overflow: hidden;" class="slider">
-        @Html.Raw(course.DESCRIPTION)
+        @Html.Raw(course.DESCRIPTION.Replace("~dash~","-"))
     </div>
     <div style="height: 20px" class="contslider_menu">
         <div style="float: right; width: 100%; text-align: center; margin-right: 0px; padding-top: 3px; margin-top: 3px; font-size:11px; cursor: pointer; height:20px; background-color: #D3D3D3;" class="slider_menu">

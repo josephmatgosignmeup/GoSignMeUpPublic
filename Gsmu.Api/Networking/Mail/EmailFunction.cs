@@ -2334,6 +2334,8 @@ namespace Gsmu.Api.Networking.Mail
             EmailEntity.EmailTo = user.EMAIL;
             EmailEntity.EmailSubject = Subject;
             EmailEntity.EmailBody = TextBody;
+            EmailEntity.AuditDate = DateTime.Now;
+            EmailEntity.AuditProcess = "Public BB_Reg";
 
             EmailFunction.SendEmail(EmailEntity);
         }

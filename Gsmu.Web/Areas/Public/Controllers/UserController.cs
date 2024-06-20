@@ -38,7 +38,7 @@ namespace Gsmu.Web.Areas.Public.Controllers
         {
             if (!ValidateUrlReferrer())
             {
-                return Content("Invalid Request.");
+                return Content("Invalid Request. Err702.");
             }
             UserWidget resultui = new UserModel().SumbitUserWidget(adminmode, ui);
 
@@ -405,7 +405,7 @@ namespace Gsmu.Web.Areas.Public.Controllers
         {
             if (!ValidateUrlReferrer())
             {
-              //  return Content("Invalid Request.");
+                return Content("Invalid Request. Err701.");
             }
             JsonResult result = new JsonResult();
             try

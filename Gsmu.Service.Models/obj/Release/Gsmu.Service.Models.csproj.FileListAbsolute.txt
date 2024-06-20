@@ -1,6 +1,0 @@
-C:\websites\lang2\Gsmu.Service.Models\bin\Release\Gsmu.Service.Models.dll
-C:\websites\lang2\Gsmu.Service.Models\bin\Release\Gsmu.Service.Models.pdb
-C:\websites\lang2\Gsmu.Service.Models\obj\Release\Gsmu.Service.Models.csproj.CoreCompileInputs.cache
-C:\websites\lang2\Gsmu.Service.Models\obj\Release\Gsmu.Service.Models.dll
-C:\websites\lang2\Gsmu.Service.Models\obj\Release\Gsmu.Service.Models.pdb
-C:\websites\lang2\Gsmu.Service.Models\obj\Release\Gsmu.Service.Models.csprojAssemblyReference.cache

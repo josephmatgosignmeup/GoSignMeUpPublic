@@ -24,6 +24,7 @@ using Gsmu.Api.Integration.Blackboard;
 using BlackBoardAPI;
 using static BlackBoardAPI.BlackBoardAPIModel;
 using System.Web.Script.Serialization;
+using Newtonsoft.Json;
 
 namespace Gsmu.Api.Data.School.User
 {
@@ -995,15 +996,33 @@ namespace Gsmu.Api.Data.School.User
                         if (Configuration.Instance.BlackboardUseAPI && Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackBoardMembershipIntegrationEnabled)
                         {
                             BlackboardAPIRequestHandler handelr = new BlackboardAPIRequestHandler();
-                            BBToken BBToken = new BBToken();
-                            BBToken = handelr.GenerateAccessToken(Configuration.Instance.BlackBoardSecretKey, Configuration.Instance.BlackBoardSecurityKey, "", Configuration.Instance.BlackboardConnectionUrl);
-                            var jsonToken = new JavaScriptSerializer().Serialize(BBToken);
+                            var jsonToken = AuthorizationHelper.getCurrentBBAccessToken();
                             var user = handelr.GetUserDetails(Configuration.Instance.BlackBoardSecretKey, Configuration.Instance.BlackBoardSecurityKey, "", Configuration.Instance.BlackboardConnectionUrl, st.USERNAME,"", "", jsonToken);
 
                             if (user.userName != null)
                             {
                                 BBUser user_update = new BBUser();
+                                if (Settings.Instance.GetMasterInfo4().blackboard_students_dsk != "" && Settings.Instance.GetMasterInfo4().blackboard_students_dsk != null)
+                                {
+                                    string tempDSK = Settings.Instance.GetMasterInfo4().blackboard_students_dsk;
+                                    if (!string.IsNullOrEmpty(tempDSK))
+                                    {
+                                        int countbar = tempDSK.Count(f => f == '_');
+                                        //if (tempDSK.IndexOf("_") < 0)
+                                        if (countbar != 2)
+                                        {
+                                            var globaldatasourceKeyDetails = handelr.GetDatasourceKeyDetails(Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackBoardSecretKey, Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackBoardSecurityKey, "", Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackboardConnectionUrl, Gsmu.Api.Integration.Blackboard.Configuration.Instance.StudentDsk, "dsk", "", jsonToken);
+                                            datasource globaldatasource = JsonConvert.DeserializeObject<datasource>(globaldatasourceKeyDetails);
+                                            string actualDSK = globaldatasource.id;
 
+                                            user_update.dataSourceId = actualDSK;
+                                        }
+                                        else
+                                        {
+                                            user_update.dataSourceId = tempDSK;
+                                        }
+                                    }
+                                }
                                 user_update.password = st.STUDNUM;
 
                                 user_update.contact = new ProfileContactObj();
@@ -1013,12 +1032,31 @@ namespace Gsmu.Api.Data.School.User
                                 user_update.name.family = st.LAST;
 
                                 BBRespUserProfile updateduser = handelr.UpdateExisitingUser(Configuration.Instance.BlackBoardSecretKey, Configuration.Instance.BlackBoardSecurityKey, "", Configuration.Instance.BlackboardConnectionUrl, user_update, user.userName, "", "", jsonToken, "");
-
-
                             }
                             else
                             {
                                 BBUser user_update = new BBUser();
+                                if (Settings.Instance.GetMasterInfo4().blackboard_students_dsk != "" && Settings.Instance.GetMasterInfo4().blackboard_students_dsk != null)
+                                {
+                                    string tempDSK = Settings.Instance.GetMasterInfo4().blackboard_students_dsk;
+                                    if (!string.IsNullOrEmpty(tempDSK))
+                                    {
+                                        int countbar = tempDSK.Count(f => f == '_');
+                                        //if (tempDSK.IndexOf("_") < 0)
+                                        if (countbar != 2)
+                                        {
+                                            var globaldatasourceKeyDetails = handelr.GetDatasourceKeyDetails(Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackBoardSecretKey, Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackBoardSecurityKey, "", Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackboardConnectionUrl, Gsmu.Api.Integration.Blackboard.Configuration.Instance.StudentDsk, "dsk", "", jsonToken);
+                                            datasource globaldatasource = JsonConvert.DeserializeObject<datasource>(globaldatasourceKeyDetails);
+                                            string actualDSK = globaldatasource.id;
+
+                                            user_update.dataSourceId = actualDSK;
+                                        }
+                                        else
+                                        {
+                                            user_update.dataSourceId = tempDSK;
+                                        }
+                                    }                                    
+                                }
                                 user_update.userName = ui.username;
                                 user_update.password = ui.password;
 
@@ -1028,15 +1066,15 @@ namespace Gsmu.Api.Data.School.User
                                 user_update.name.given = ui.first;
                                 user_update.name.family = ui.last;
 
-                                string[] bbSystemRole = new string[1];
+                              //  string[] bbSystemRole = new string[1];
                                 string[] bbInstitutionRole = new string[1];
-                                bbSystemRole[0] = Configuration.Instance.BlackboardSystemRole;
+                                //bbSystemRole[0] = Configuration.Instance.BlackboardSystemRole;
                                 bbInstitutionRole[0] =Configuration.Instance.BlackboardInstitutionalRole;
-
-                                user_update.systemRoleIds = bbSystemRole;
+                                //user_update.systemRoleIds = bbSystemRole;
                                 user_update.institutionRoleIds = bbInstitutionRole;
-                                BBRespUserProfile updateduser = handelr.CreateNewUser(Configuration.Instance.BlackBoardSecretKey, Configuration.Instance.BlackBoardSecurityKey, "", Configuration.Instance.BlackboardConnectionUrl, user_update,"", jsonToken, "");
-                                st.Blackboard_user_UUID = updateduser.uuid;
+
+                                BBRespUserProfile updateduser = handelr.CreateNewUser(Configuration.Instance.BlackBoardSecretKey, Configuration.Instance.BlackBoardSecurityKey, "", Configuration.Instance.BlackboardConnectionUrl, user_update,"", jsonToken,"", Configuration.Instance.StudentInstitutionalHierarchyNodeId);
+                                st.Blackboard_user_UUID = updateduser.uuid;   
                             }
                         }
                         else
@@ -1065,10 +1103,29 @@ namespace Gsmu.Api.Data.School.User
                         if (Configuration.Instance.BlackboardUseAPI && Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackBoardMembershipIntegrationEnabled)
                         {
                             BlackboardAPIRequestHandler handelr = new BlackboardAPIRequestHandler();
-                            BBToken BBToken = new BBToken();
-                            BBToken = handelr.GenerateAccessToken(Configuration.Instance.BlackBoardSecretKey, Configuration.Instance.BlackBoardSecurityKey, "", Configuration.Instance.BlackboardConnectionUrl);
-                            var jsonToken = new JavaScriptSerializer().Serialize(BBToken);
+                            var jsonToken = AuthorizationHelper.getCurrentBBAccessToken();
                             BBUser user_update = new BBUser();
+
+                            if (Settings.Instance.GetMasterInfo4().blackboard_students_dsk != "" && Settings.Instance.GetMasterInfo4().blackboard_students_dsk != null)
+                            {
+                                string tempDSK = Settings.Instance.GetMasterInfo4().blackboard_students_dsk;
+                                if (!string.IsNullOrEmpty(tempDSK))
+                                {
+                                    if (tempDSK.IndexOf("_") < 0)
+                                    {
+                                        var globaldatasourceKeyDetails = handelr.GetDatasourceKeyDetails(Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackBoardSecretKey, Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackBoardSecurityKey, "", Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackboardConnectionUrl, Gsmu.Api.Integration.Blackboard.Configuration.Instance.StudentDsk, "dsk", "", jsonToken);
+                                        datasource globaldatasource = JsonConvert.DeserializeObject<datasource>(globaldatasourceKeyDetails);
+                                        string actualDSK = globaldatasource.id;
+
+                                        user_update.dataSourceId = actualDSK;
+                                    }
+                                    else
+                                    {
+                                        user_update.dataSourceId = tempDSK;
+                                    }
+                                }
+                            }
+
                             //user_update.userName = Request["username"];
                             user_update.password = st.STUDNUM;
                             //user_update.userName = st.Blackboard_user_UUID;
@@ -1078,9 +1135,7 @@ namespace Gsmu.Api.Data.School.User
                             user_update.name.given = st.FIRST;
                             user_update.name.family = st.LAST;
 
-
                             BBRespUserProfile updateduser = handelr.UpdateExisitingUser(Configuration.Instance.BlackBoardSecretKey, Configuration.Instance.BlackBoardSecurityKey, "", Configuration.Instance.BlackboardConnectionUrl, user_update, st.Blackboard_user_UUID, "uuid", "", jsonToken, "");
-
                         }
                         else
                         {
@@ -1573,6 +1628,77 @@ namespace Gsmu.Api.Data.School.User
                 }
 
             }
+
+
+
+            if (Configuration.Instance.BlackboardUseAPI && Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackBoardMembershipIntegrationEnabled)
+            {
+                BlackboardAPIRequestHandler handelr = new BlackboardAPIRequestHandler();
+                var jsonToken = AuthorizationHelper.getCurrentBBAccessToken();
+                var user = handelr.GetUserDetails(Configuration.Instance.BlackBoardSecretKey, Configuration.Instance.BlackBoardSecurityKey, "", Configuration.Instance.BlackboardConnectionUrl, it.USERNAME, "", "", jsonToken);
+
+                if (user.userName != null)
+                {
+                    BBUser user_update = new BBUser();
+                    user_update.dataSourceId = Settings.Instance.GetMasterInfo4().blackboard_instructors_dsk;
+                    user_update.password =it.PASSWORD;
+
+                    user_update.contact = new ProfileContactObj();
+                    user_update.contact.email = ui.email;
+                    user_update.name = new ProfileNameObj();
+                    user_update.name.given = it.FIRST;
+                    user_update.name.family = it.LAST;
+
+                    BBRespUserProfile updateduser = handelr.UpdateExisitingUser(Configuration.Instance.BlackBoardSecretKey, Configuration.Instance.BlackBoardSecurityKey, "", Configuration.Instance.BlackboardConnectionUrl, user_update, user.userName, "", "", jsonToken, "");
+
+
+                }
+                else
+                {
+                    BBUser user_update = new BBUser();
+
+                    if (Settings.Instance.GetMasterInfo4().blackboard_instructors_dsk != "" && Settings.Instance.GetMasterInfo4().blackboard_instructors_dsk != null)
+                    {
+                        string tempDSK = Settings.Instance.GetMasterInfo4().blackboard_instructors_dsk;
+                        if (!string.IsNullOrEmpty(tempDSK))
+                        {
+                            if (tempDSK.IndexOf("_") < 0)
+                            {
+                                var globaldatasourceKeyDetails = handelr.GetDatasourceKeyDetails(Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackBoardSecretKey, Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackBoardSecurityKey, "", Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackboardConnectionUrl, Gsmu.Api.Integration.Blackboard.Configuration.Instance.InstructorsDsk, "dsk", "", jsonToken);
+                                datasource globaldatasource = JsonConvert.DeserializeObject<datasource>(globaldatasourceKeyDetails);
+                                string actualDSK = globaldatasource.id;
+
+                                user_update.dataSourceId = actualDSK;
+                            }
+                            else
+                            {
+                                user_update.dataSourceId = tempDSK;
+                            }
+                        }
+                    }
+                    
+                    user_update.userName = ui.username;
+                    user_update.password = ui.password;
+
+                    user_update.contact = new ProfileContactObj();
+                    user_update.contact.email = ui.email;
+                    user_update.name = new ProfileNameObj();
+                    user_update.name.given = ui.first;
+                    user_update.name.family = ui.last;
+
+                    string[] bbSystemRole = new string[1];
+                    string[] bbInstitutionRole = new string[1];
+                    //bbSystemRole[0] = Configuration.Instance.BlackboardSystemRole;
+                    bbInstitutionRole[0] = Configuration.Instance.BlackboardInstructorRole;
+
+                   // user_update.systemRoleIds = bbSystemRole;
+                    user_update.institutionRoleIds = bbInstitutionRole;
+                    BBRespUserProfile updateduser = handelr.CreateNewUser(Configuration.Instance.BlackBoardSecretKey, Configuration.Instance.BlackBoardSecurityKey, "", Configuration.Instance.BlackboardConnectionUrl, user_update, "", jsonToken, "", Configuration.Instance.StudentInstitutionalHierarchyNodeId);
+                    it.Blackboard_user_UUID = updateduser.uuid;
+                }
+            }
+
+
 
 
             if (ui.userid == 0) { Context.Instructors.Add(it); }
@@ -2456,9 +2582,7 @@ namespace Gsmu.Api.Data.School.User
                         if (userid != 0)
                         {
                             BlackboardAPIRequestHandler handelr = new BlackboardAPIRequestHandler();
-                            BBToken BBToken = new BBToken();
-                            BBToken = handelr.GenerateAccessToken(Configuration.Instance.BlackBoardSecretKey, Configuration.Instance.BlackBoardSecurityKey, "", Configuration.Instance.BlackboardConnectionUrl);
-                            var jsonToken = new JavaScriptSerializer().Serialize(BBToken);
+                            var jsonToken = AuthorizationHelper.getCurrentBBAccessToken();
                             BBUser user_update = new BBUser();
                             ProfileAvailabilityObj availability = new ProfileAvailabilityObj();
                             availability.available = available;
