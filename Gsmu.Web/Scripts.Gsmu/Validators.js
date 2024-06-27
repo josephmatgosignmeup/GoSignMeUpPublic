@@ -136,9 +136,64 @@ function checkPhoneFormat(val, field) {
     }
 }
 
-function checkPasswordFormat(val, field, isSpecialCase) {
+function checkPasswordFormat(val, field, isSpecialCase, format) {
+
     if (val == "**********"|| val == "") {
         return true;
+    }
+    else if (format == "None")
+    {
+        return true;
+    }
+    else if (format == "Basic")
+    {
+        var validfield = true;
+        var errmsgall = "";
+
+        var regEx0 = /(?=.*[a-zA-Z])/;
+        errmsg0 = " At least one letter </br>"
+        if (regEx0.test(val)) {
+            errmsgall += "<img src='/Images/Icons/FamFamFam/accept.png'/> " + errmsg0
+        } else {
+            errmsgall += "<img src='/Images/Icons/FamFamFam/crossinv.png'/> " + errmsg0
+            validfield = false
+        }
+
+
+        var regEx2 = /(?=.*[0-9])/;
+        errmsg2 = "At least one number </br>"
+        if (regEx2.test(val)) {
+            errmsgall += "<img src='/Images/Icons/FamFamFam/accept.png'/> " + errmsg2
+        } else {
+            errmsgall += "<img src='/Images/Icons/FamFamFam/crossinv.png'/> " + errmsg2
+            validfield = false
+        }
+
+        var regEx3 = /[0-9a-zA-Z]{7,}/;
+        errmsg3 = "Be at least 7 characters </br>"
+        if (val.toString().length >= 7) {
+            //}
+            //if (regEx3.test(val)) {
+            errmsgall += "<img src='/Images/Icons/FamFamFam/accept.png'/> " + errmsg3
+        } else {
+            errmsgall += "<img src='/Images/Icons/FamFamFam/crossinv.png'/> " + errmsg3
+            validfield = false
+        }
+        var ErrDisp = Ext.getCmp('errdisp' + field.id);
+        //console.log(field)
+        if (!validfield) {
+            // INVALID
+            ErrDisp.setValue('<font style=\'color: #c0272b;font: normal 11px/16px tahoma, arial, verdana, sans-serif;\'>' + errmsgall + '</font>');
+            ErrDisp.show();
+            ErrorBoxField(field, false)
+            return false;
+        } else {
+            // VALID
+            ErrDisp.setValue('');
+            ErrDisp.hide();
+            ErrorBoxField(field, true)
+            return true;
+        }
     }
     else {
         var ErrDisp = Ext.getCmp('errdisp' + field.id);

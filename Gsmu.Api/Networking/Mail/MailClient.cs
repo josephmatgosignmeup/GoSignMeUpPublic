@@ -379,12 +379,13 @@ namespace Gsmu.Api.Networking.Mail
                 }
                 using (var db = new SchoolEntities())
                 {
-                    if (Authorization.AuthorizationHelper.CurrentUser != null)
-                    {
-                        EmailEntity.LoggedInUser = Authorization.AuthorizationHelper.CurrentUser.LoggedInUsername;
-                    }
-                    db.EmailAuditTrails.Add(EmailEntity);
-                    db.SaveChanges();
+                        if (Authorization.AuthorizationHelper.CurrentUser != null)
+                        {
+                            EmailEntity.LoggedInUser = Authorization.AuthorizationHelper.CurrentUser.LoggedInUsername;
+                        }
+                        db.EmailAuditTrails.Add(EmailEntity);
+                        db.SaveChanges();
+                    
 
                 }
             }

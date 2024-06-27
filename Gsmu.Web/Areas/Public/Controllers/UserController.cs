@@ -38,7 +38,7 @@ namespace Gsmu.Web.Areas.Public.Controllers
         {
             if (!ValidateUrlReferrer())
             {
-                return Content("Invalid Request.");
+                return Content("Invalid Request. Err702.");
             }
             UserWidget resultui = new UserModel().SumbitUserWidget(adminmode, ui);
 
@@ -302,6 +302,7 @@ namespace Gsmu.Web.Areas.Public.Controllers
             ViewBag.cmd = cmd;
             ViewBag.AllowMultiEnroll = Settings.Instance.GetMasterInfo2().AllowStudentMultiEnroll;
             ViewBag.MultipleSignUp = Settings.Instance.GetMasterInfo3().restrictStudentMultiSignup;
+            ViewBag.UserCoursesHeight = WebConfiguration.UserCoursesHeight;
             ViewBag.CancelCourseDateReached = true;
             ViewBag.AllowCourseCancelOnPaymentStatus = Settings.Instance.GetMasterInfo3().allowcancelOnlyNotPaid;
             UserModel ui = new UserModel(usergroup, cmd, userid_fromSupervisor);
@@ -405,7 +406,7 @@ namespace Gsmu.Web.Areas.Public.Controllers
         {
             if (!ValidateUrlReferrer())
             {
-              //  return Content("Invalid Request.");
+                return Content("Invalid Request. Err701.");
             }
             JsonResult result = new JsonResult();
             try

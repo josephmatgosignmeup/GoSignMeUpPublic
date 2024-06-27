@@ -360,7 +360,7 @@ namespace Gsmu.Web.Areas.Public.Controllers
 
             if (!ValidateUrlReferrer())
             {
-                return Content("Invalid Request.");
+                return Content("Invalid Request. Err703.");
             }
             try
             {
@@ -1425,7 +1425,7 @@ namespace Gsmu.Web.Areas.Public.Controllers
 
             if (!ValidateUrlReferrer())
             {
-                return Content("Invalid Request.");
+                return Content("Invalid Request. Err724.");
             }
             var chkout = CheckoutInfo.Instance;
             if (AuthorizationHelper.CurrentUser.LoggedInUserType == LoggedInUserType.Guest && chkout.PaymentCaller != "paynowuserdash")
@@ -5710,7 +5710,8 @@ namespace Gsmu.Web.Areas.Public.Controllers
 
         public bool ValidateUrlReferrer()
         {
-            if(HttpContext.Request.UrlReferrer.Authority.ToString().ToLower()!= Settings.Instance.GetMasterInfo4().DotNetSiteRootUrl.ToLower().Replace("/","").Replace("https:",""))
+            var test = Settings.Instance.GetMasterInfo4().DotNetSiteRootUrl.ToLower().Replace("/", "").Replace("https:", "");
+            if (HttpContext.Request.UrlReferrer.Authority.ToString().ToLower()!= Settings.Instance.GetMasterInfo4().DotNetSiteRootUrl.ToLower().Replace("/","").Replace("https:",""))
             {
                 return false;
             }

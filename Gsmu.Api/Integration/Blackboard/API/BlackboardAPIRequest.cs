@@ -27,7 +27,7 @@ namespace Gsmu.Api.Integration.Blackboard.API
             string application_key = Settings.Instance.GetMasterInfo4().blackboard_security_key;
             string secret_key = Settings.Instance.GetMasterInfo3().BlackBoardSecretKey;
             string return_url = Settings.Instance.GetMasterInfo4().DotNetSiteRootUrl;
-            string connection_url = Settings.Instance.GetMasterInfo2().BlackboardConnectionUrl;
+            string connection_url = Settings.Instance.GetMasterInfo4().blackboard_api_url;
             BBToken token =   Task.Run(async () => await BlackBoardAPIConnector.BlckBoardAPICall(code,secret_key,application_key,return_url,connection_url)).Result;
             return token;
         }
@@ -38,7 +38,7 @@ namespace Gsmu.Api.Integration.Blackboard.API
             string application_key = Settings.Instance.GetMasterInfo4().blackboard_security_key;
             string secret_key = Settings.Instance.GetMasterInfo3().BlackBoardSecretKey;
             string return_url = Settings.Instance.GetMasterInfo4().DotNetSiteRootUrl;
-            string connection_url = Settings.Instance.GetMasterInfo2().BlackboardConnectionUrl;
+            string connection_url = Settings.Instance.GetMasterInfo4().blackboard_api_url;
             BBUser user = BlackBoardAPIConnector.BlckBoardAPICallGetUserDetails(connection_url,token.user_id,token);
             return user;
         }

@@ -13,7 +13,7 @@ namespace Gsmu.Service.BusinessLogic.Admin.Reports
     public class RosterReport : IRosterReport
     {
 
-        public RosterReportResult GenerateRosterReportXXX(Gsmu.Api.Data.QueryState QueryState)
+        public RosterReportResult GenerateRosterReport(Gsmu.Api.Data.QueryState QueryState)
         {
             RosterReportResult RosterReportResult = new RosterReportResult();
 
@@ -22,7 +22,7 @@ namespace Gsmu.Service.BusinessLogic.Admin.Reports
             {
                 var dateRangeFrom = DateTime.Now.AddDays(-30).Date;
                 var dateRangeTo = DateTime.Now.AddDays(30).Date;
-                int cancelled = 0;
+                int cancelled = -1;
                 string categorymain = null;
                 string categorysub = null;
                 string categorysubsub = null;
@@ -34,7 +34,7 @@ namespace Gsmu.Service.BusinessLogic.Admin.Reports
                 var start = 1;
                 var limit = 10;
                 page = QueryState.Page;
-                start = ((QueryState.Page) * QueryState.PageSize)- QueryState.PageSize;
+                start = ((QueryState.Page) * QueryState.PageSize) - QueryState.PageSize;
                 limit = QueryState.PageSize;
 
                 string keyword = null;
@@ -126,6 +126,7 @@ namespace Gsmu.Service.BusinessLogic.Admin.Reports
 
                     }
                 }
+
 
 
                 List<RosterReport_Object> rosters = (from _rosters in db.sp_RosterReportV2(
@@ -267,10 +268,7 @@ namespace Gsmu.Service.BusinessLogic.Admin.Reports
                                                          rawenddate = _rosters.enddate,
                                                          daddress = _rosters.daddress,
                                                          count = _rosters.Count,
-                                                         RowNum = _rosters.RowNum,
                                                          TotalCount = _rosters.TotalCount,
-                                                         startdate = _rosters.startdate.ToString(),
-                                                         enddate = _rosters.enddate.ToString(),
 
 
                                                      }).ToList();
@@ -291,7 +289,7 @@ namespace Gsmu.Service.BusinessLogic.Admin.Reports
 
 
 
-        public RosterReportResult GenerateRosterReport(Gsmu.Api.Data.QueryState QueryState)
+        public RosterReportResult GenerateRosterReportYYY(Gsmu.Api.Data.QueryState QueryState)
         {
             RosterReportResult RosterReportResult = new RosterReportResult();
 
@@ -316,7 +314,7 @@ namespace Gsmu.Service.BusinessLogic.Admin.Reports
                                    maxenroll = _rosters.maxenroll,
                                    maxwait = _rosters.maxwait,
                                    room = _rosters.room,
-                                  // accountnum = _rosters.ACCOUNTNUM,
+                                   // accountnum = _rosters.ACCOUNTNUM,
                                    instructorid = _rosters.instructorid,
                                    instructorid2 = _rosters.instructorid2,
                                    instructorid3 = _rosters.instructorid3,
@@ -527,7 +525,7 @@ namespace Gsmu.Service.BusinessLogic.Admin.Reports
                 RosterReport_Object
                 {
                     EnrollToWaitStatus = _rosters.roster.EnrollToWaitStatus,
-                    EnrollToWaitListConfig = _rosters.roster.EnrollToWaitListConfig,                    
+                    EnrollToWaitListConfig = _rosters.roster.EnrollToWaitListConfig,
                     coursenameid = _rosters.roster.coursenameid,
                     cancelcourse = _rosters.roster.cancelcourse,
                     coursedateid = _rosters.roster.coursedateid,
@@ -655,7 +653,7 @@ namespace Gsmu.Service.BusinessLogic.Admin.Reports
                 start = (QueryState.Page - 1) * QueryState.PageSize;
                 limit = QueryState.PageSize;
 
-                    groupedrosters = groupedrosters.OrderBy(roster => roster.startdate);
+                groupedrosters = groupedrosters.OrderBy(roster => roster.startdate);
                 if (QueryState.Sorters.Count > 0)
                 {
                     var counter = 0;
@@ -1002,12 +1000,12 @@ namespace Gsmu.Service.BusinessLogic.Admin.Reports
                                 groupedrosters = groupedrosters.OrderByDescending(roster => roster.coursedateid).ThenBy(roster => roster.readonlystudregfield1);
                         }
 
-     
 
 
 
 
-                  }
+
+                    }
                 }
                 else
                 {

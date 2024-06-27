@@ -16,9 +16,11 @@ using Gsmu.Api.Data;
 using Gsmu.Api.Integration.Blackboard;
 using blackboard = Gsmu.Api.Integration.Blackboard;
 using haiku = Gsmu.Api.Integration.Haiku;
-
+using BlackBoardAPI;
 using Gsmu.Api.Integration.Blackboard.API;
 using static BlackBoardAPI.BlackBoardAPIModel;
+using System.Web.Script.Serialization;
+using Newtonsoft.Json;
 
 namespace Gsmu.Api.Authorization
 {
@@ -734,6 +736,62 @@ namespace Gsmu.Api.Authorization
             return decStr;
       }
 
+        public static string getCurrentBBAccessToken()
+        {
+            DateTime TempExpiraDate = new DateTime(1900, 1, 1);
+            string BlackBoardSecurityKey = Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackBoardSecurityKey; // applicationid
+            string BlackBoardSecretKey = Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackBoardSecretKey;  //secret key
+            string BlackboardAccessToken = Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackboardAccessToken;  //current access token
+            DateTime BlackboardAccessTokenExpiry = Settings.Instance.GetMasterInfo4().blackboard_token_expiry ?? TempExpiraDate;  //secret key
+            DateTime DatetimeNow = DateTime.Now;
+            DateTime CurrTokenExp = BlackboardAccessTokenExpiry.AddHours(1);
 
+            if (Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackboardUseAPI)
+            {
+                //if (DateTime.Now >= BlackboardAccessTokenExpiry.AddHours(1))
+                if (DateTime.Now >= BlackboardAccessTokenExpiry)
+                {
+                    BlackBoardAPI.BlackboardAPIRequestHandler handelr = new BlackboardAPIRequestHandler();
+                    BBToken BBToken = new BBToken();
+                    BBToken = handelr.GenerateAccessToken(BlackBoardSecretKey, BlackBoardSecurityKey, "", Gsmu.Api.Integration.Blackboard.Configuration.Instance.BlackboardConnectionUrl);
+                    var jsonToken = new JavaScriptSerializer().Serialize(BBToken);
+                    BBToken CurBBtoken = new BBToken();
+                    CurBBtoken = JsonConvert.DeserializeObject<BBToken>(jsonToken);
+                    CurrTokenExp = DateTime.Now;
+                    CurrTokenExp = CurrTokenExp.AddSeconds(Int32.Parse(CurBBtoken.expires_in) - 1);
+                    Gsmu.Api.Data.Settings.Instance.SetMasterinfoValue(4, "blackboard_access_token", jsonToken);
+                    Gsmu.Api.Data.Settings.Instance.SetMasterinfoValue(4, "blackboard_token_expiry", CurrTokenExp.ToString());
+
+                    Gsmu.Api.Data.School.Entities.AuditTrail Audittrail = new Gsmu.Api.Data.School.Entities.AuditTrail();
+                    Audittrail.TableName = "Authorization";
+                    Audittrail.DetailDescription = "Blakcboard Token Gen";
+                    Audittrail.AuditDate = DateTime.Now;
+                    Audittrail.CourseID = 0;
+                    Audittrail.RoutineName = "AuthorizationHelper" + AuthorizationHelper.CurrentUser.LoggedInUserType;
+                    Audittrail.UserName = "";
+                    Audittrail.AuditAction = "Old Time: " + BlackboardAccessTokenExpiry + " - New Token:" + jsonToken;
+                    Gsmu.Api.Logging.LogManagerDispossable LogManager = new Api.Logging.LogManagerDispossable();
+                    LogManager.LogSiteActivity(Audittrail);
+                    return jsonToken;
+                }
+                else {
+                    Gsmu.Api.Data.School.Entities.AuditTrail Audittrail = new Gsmu.Api.Data.School.Entities.AuditTrail();
+                    Audittrail.TableName = "Authorization";
+                    Audittrail.DetailDescription = "Blakcboard Token reuse";
+                    Audittrail.AuditDate = DateTime.Now;
+                    Audittrail.CourseID = 0;
+                    Audittrail.RoutineName = "AuthorizationHelper" + AuthorizationHelper.CurrentUser.LoggedInUserType;
+                    Audittrail.UserName = "";
+                    Audittrail.AuditAction = "Current Time: " + BlackboardAccessTokenExpiry + " - Current Token:" + BlackboardAccessToken;
+                    Gsmu.Api.Logging.LogManagerDispossable LogManager = new Api.Logging.LogManagerDispossable();
+                    LogManager.LogSiteActivity(Audittrail);
+                    return BlackboardAccessToken;
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
     }
 }

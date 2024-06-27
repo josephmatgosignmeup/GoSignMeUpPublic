@@ -407,6 +407,7 @@
           <Property Name="EnrollToWaitListConfig" Type="nvarchar" MaxLength="500" />
           <Property Name="canvas_skip" Type="int" />
           <Property Name="clubpilatespackageinstallmentdetails" Type="ntext" />
+          <Property Name="blackboard_roster_id" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Course Times">
           <Key>
@@ -681,7 +682,7 @@
           <Property Name="blackboard_dsk" Type="nvarchar" MaxLength="100" />
           <Property Name="CourseConfiguration" Type="ntext" />
           <Property Name="clubready_package_id" Type="int" />
-          <Property Name="blackboard_api_uuid" Type="nvarchar" MaxLength="150" />
+          <Property Name="blackboard_api_uuid" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="CoursesCourseChoices">
           <Key>
@@ -1254,7 +1255,6 @@
           <Property Name="resetPasswordDate" Type="datetime" />
           <Property Name="UserSessionId" Type="uniqueidentifier" />
           <Property Name="Blackboard_user_UUID" Type="nvarchar" MaxLength="50" />
-          
         </EntityType>
         <EntityType Name="licenseinfo">
           <Key>
@@ -2404,8 +2404,10 @@
           <Property Name="RevTrakConfiguration" Type="ntext" />
           <Property Name="SpreedlyConfiguration" Type="ntext" />
           <Property Name="CompleteSupAccountToSupervisor" Type="int" />
-          <Property Name="blackboard_api_url" Type="ntext" />
+          <Property Name="blackboard_api_url" Type="nvarchar" MaxLength="250" />
           <Property Name="use_blackboard_api" Type="int" />
+          <Property Name="blackboard_access_token" Type="nvarchar" MaxLength="250" />
+          <Property Name="blackboard_token_expiry" Type="datetime" />
         </EntityType>
         <EntityType Name="Materials">
           <Key>
@@ -2624,7 +2626,6 @@ warning 6002: The table/view 'school.dbo.Memberships' does not have a primary ke
           <Property Name="HiddenParentRegField2" Type="nvarchar" MaxLength="25" />
           <Property Name="resetPasswordHash" Type="nvarchar" MaxLength="50" />
           <Property Name="resetPasswordDate" Type="datetime" />
-          
         </EntityType>
         <EntityType Name="Payment Options">
           <Key>
@@ -5936,6 +5937,7 @@ warning 6002: The table/view 'school.dbo.StudentsOtherInfoView' does not have a 
           <Property Type="Int32" Name="canvas_skip" />
           <Property Type="String" Name="clubpilatespackageinstallmentdetails" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Student" Relationship="School.Fk_Courses_Course_Roster_STUDENTID" FromRole="Course_Roster" ToRole="Student" />
+          <Property Name="blackboard_roster_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Course_Time">
           <Key>
@@ -6209,7 +6211,7 @@ warning 6002: The table/view 'school.dbo.StudentsOtherInfoView' does not have a 
           <Property Name="blackboard_dsk" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="CourseConfiguration" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="clubready_package_id" />
-          <Property Name="blackboard_api_uuid" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="blackboard_api_uuid" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           </EntityType>
         <EntityType Name="CoursesPendingRequest">
           <Key>
@@ -7546,8 +7548,10 @@ warning 6002: The table/view 'school.dbo.StudentsOtherInfoView' does not have a 
           <Property Type="String" Name="RevTrakConfiguration" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="SpreedlyConfiguration" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CompleteSupAccountToSupervisor" Type="Int32" />
-          <Property Type="String" Name="blackboard_api_url" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="blackboard_api_url" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="use_blackboard_api" Type="Int32" />
+          <Property Name="blackboard_access_token" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="blackboard_token_expiry" Type="DateTime" Precision="3" />
         
 
 
@@ -11435,6 +11439,7 @@ warning 6002: The table/view 'school.dbo.StudentsOtherInfoView' does not have a 
           <EntitySetMapping Name="Course_Rosters">
             <EntityTypeMapping TypeName="School.Course_Roster">
               <MappingFragment StoreEntitySet="Course Roster">
+                <ScalarProperty Name="blackboard_roster_id" ColumnName="blackboard_roster_id" />
                 <ScalarProperty Name="clubpilatespackageinstallmentdetails" ColumnName="clubpilatespackageinstallmentdetails" />
                 <ScalarProperty Name="canvas_skip" ColumnName="canvas_skip" />
                 <ScalarProperty Name="EnrollToWaitListConfig" ColumnName="EnrollToWaitListConfig" />
@@ -13107,6 +13112,8 @@ warning 6002: The table/view 'school.dbo.StudentsOtherInfoView' does not have a 
               <MappingFragment StoreEntitySet="masterinfo4">
 
 
+                <ScalarProperty Name="blackboard_token_expiry" ColumnName="blackboard_token_expiry" />
+                <ScalarProperty Name="blackboard_access_token" ColumnName="blackboard_access_token" />
                 <ScalarProperty Name="use_blackboard_api" ColumnName="use_blackboard_api" />
                 <ScalarProperty Name="blackboard_api_url" ColumnName="blackboard_api_url" />
                 <ScalarProperty Name="CompleteSupAccountToSupervisor" ColumnName="CompleteSupAccountToSupervisor" />
@@ -16506,8 +16513,8 @@ warning 6002: The table/view 'school.dbo.StudentsOtherInfoView' does not have a 
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="True" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
         <DesignerProperty Name="UseLegacyProvider" Value="False" />
       </DesignerInfoPropertySet>
