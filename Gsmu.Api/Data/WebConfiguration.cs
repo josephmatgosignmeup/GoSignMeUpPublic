@@ -765,6 +765,22 @@ namespace Gsmu.Api.Data
             }
         }
 
+        public static string UserCoursesHeight
+        {
+            get
+            {
+                string value = ConfigurationManager.AppSettings["UserCoursesHeight"];
+                if (string.IsNullOrEmpty(value))
+                {
+                    return "280";
+                }
+                else
+                {
+                    return value;
+                }
+            }
+        }
+
         public static int IsAdvance
         {
             get
