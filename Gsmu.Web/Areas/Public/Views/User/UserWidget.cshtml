@@ -27,6 +27,7 @@
     bool BlackboardSsoEnabled = blackboard.Configuration.Instance.BlackboardSsoEnabled;
     bool canvasEnabled = Gsmu.Api.Integration.Canvas.Configuration.Instance.EnableOAuth2Authentication;
     bool isBlackboardOwned = false;
+    string passwordFormat = System.Configuration.ConfigurationManager.AppSettings["PasswordFormat"];
 
     if (ViewBag.cmode == "txt")
     {
@@ -56,16 +57,18 @@
 
             TableName = "Instructors";
             userregfieldspec = dlists.AllInstructorUserFields;
-
-            if (Model.Instructor.canvas_user_id > 0 && Model.Instructor.PASSWORD.IndexOf("canvas") > 0)
+            if (Model.Instructor != null)
             {
-                hideUsernameAndPassword = true;
-                userManagementProvider = "Canvas";
-            }
-            if (!string.IsNullOrWhiteSpace(Model.Instructor.lti_user_id))
-            {
-                hideUsernameAndPassword = true;
-                userManagementProvider = "LTI";
+                if (Model.Instructor.canvas_user_id > 0 && Model.Instructor.PASSWORD.IndexOf("canvas") > 0)
+                {
+                    hideUsernameAndPassword = true;
+                    userManagementProvider = "Canvas";
+                }
+                if (!string.IsNullOrWhiteSpace(Model.Instructor.lti_user_id))
+                {
+                    hideUsernameAndPassword = true;
+                    userManagementProvider = "LTI";
+                }
             }
 
             break;
@@ -644,20 +647,21 @@
                     <text>
 
                     var cmbxfld = Ext.getCmp('@formId' + 'school');
-                    var CmboStoreSchool = cmbxfld.getStore();
-                    CmboStoreSchool.filter([
-                        { id: 'district', property: 'district', value: @Html.Json(fldvalue) }
-                    ]);
-                    CmboStoreSchool.on('load', function() {
-                        cmbxfld.Text = '';
-                        if(CmboStoreSchool.data.length==0){
-                            cmbxfld.emptyText = 'No record available';
-                        }else{
-                            cmbxfld.emptyText = '@emptyText';
-                        }
-                        cmbxfld.applyEmptyText();
-                    })
-
+                    if (cmbxfld != undefined) {
+                        var CmboStoreSchool = cmbxfld.getStore();
+                        CmboStoreSchool.filter([
+                            { id: 'district', property: 'district', value: @Html.Json(fldvalue) }
+                        ]);
+                        CmboStoreSchool.on('load', function () {
+                            cmbxfld.Text = '';
+                            if (CmboStoreSchool.data.length == 0) {
+                                cmbxfld.emptyText = 'No record available';
+                            } else {
+                                cmbxfld.emptyText = '@emptyText';
+                            }
+                            cmbxfld.applyEmptyText();
+                        })
+                    }
                     </text>
                 }
             },
@@ -1492,7 +1496,7 @@
                                     {
                                         isSpecialCase = true;
                                     }
-                                    return checkPasswordFormat(field.getValue(), field, isSpecialCase);
+                                        return checkPasswordFormat(field.getValue(), field, isSpecialCase,'@passwordFormat');
                                 }
                                 },{
                                     xtype: 'displayfield', //for displaying custom error
