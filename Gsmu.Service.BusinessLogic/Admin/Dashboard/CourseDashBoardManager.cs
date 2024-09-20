@@ -173,7 +173,8 @@ namespace Gsmu.Service.BusinessLogic.Admin.Dashboard
             {
                 CourseCategoryID = c.CourseCategoryID,
                 CourseCategoryColor = c.CourseCategoryColor.ToLower(),
-                CourseCategoryName = c.CourseCategoryName
+                CourseCategoryName = c.CourseCategoryName,
+                UseColorBar = c.UseColorBar
             }).ToList();
 
             configModel.CustomCertificates = _db.customcetificates.Select(cc => new Models.School.CustomCertificateModel()

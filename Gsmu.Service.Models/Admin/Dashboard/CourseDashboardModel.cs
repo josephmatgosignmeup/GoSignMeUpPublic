@@ -242,6 +242,8 @@ namespace Gsmu.Service.Models.Admin.CourseDashboard
         public int CourseCategoryID { get; set; }
         public string CourseCategoryColor { get; set; }
         public string CourseCategoryName { get; set; }
+
+        public int UseColorBar { get; set; }
     }
 
     public class CourseExpensesModel

@@ -76,7 +76,8 @@ namespace Gsmu.Service.BusinessLogic.Global.Settings
             {
                 CourseCategoryID = c.CourseCategoryID,
                 CourseCategoryColor = c.CourseCategoryColor.ToLower(),
-                CourseCategoryName = c.CourseCategoryName
+                CourseCategoryName = c.CourseCategoryName,
+                UseColorBar = c.UseColorBar
             }).ToList();
         }
 

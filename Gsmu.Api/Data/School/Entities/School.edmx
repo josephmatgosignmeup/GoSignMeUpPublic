@@ -445,6 +445,7 @@
           <Property Name="CourseCategoryColor" Type="nvarchar" MaxLength="6" />
           <Property Name="CourseCategoryName" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="registrationlimit" Type="smallint" Nullable="false" />
+          <Property Name="UseColorBar" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="CourseChoices">
           <Key>
@@ -5976,6 +5977,7 @@ warning 6002: The table/view 'school.dbo.StudentsOtherInfoView' does not have a 
           <Property Name="CourseCategoryColor" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
           <Property Name="CourseCategoryName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="registrationlimit" Type="Int16" Nullable="false" />
+          <Property Name="UseColorBar" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="CourseChoice">
           <Key>
@@ -11630,6 +11632,7 @@ warning 6002: The table/view 'school.dbo.StudentsOtherInfoView' does not have a 
           <EntitySetMapping Name="CourseCategories">
             <EntityTypeMapping TypeName="School.CourseCategory">
               <MappingFragment StoreEntitySet="CourseCategory">
+                <ScalarProperty Name="UseColorBar" ColumnName="UseColorBar" />
                 <ScalarProperty Name="registrationlimit" ColumnName="registrationlimit" />
                 <ScalarProperty Name="CourseCategoryName" ColumnName="CourseCategoryName" />
                 <ScalarProperty Name="CourseCategoryColor" ColumnName="CourseCategoryColor" />
