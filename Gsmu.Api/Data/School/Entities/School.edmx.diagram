@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="92c4f6ee543c49c59891af10f6e39049" Name="Diagram1" ZoomLevel="74">
+      <Diagram DiagramId="92c4f6ee543c49c59891af10f6e39049" Name="Diagram1" ZoomLevel="83">
         <EntityTypeShape EntityType="School.AdHocReportTemplate" Width="1.5" PointX="2.75" PointY="0.75" />
         <EntityTypeShape EntityType="School.adminpass" Width="1.5" PointX="5.75" PointY="5.75" />
         <EntityTypeShape EntityType="School.Attendance" Width="1.5" PointX="5.25" PointY="87.625" />
@@ -22,7 +22,7 @@
         <EntityTypeShape EntityType="School.CitrixLog" Width="1.5" PointX="0.75" PointY="10.75" />
         <EntityTypeShape EntityType="School.Country" Width="1.5" PointX="9.75" PointY="10.75" />
         <EntityTypeShape EntityType="School.Coupon" Width="1.5" PointX="11.75" PointY="4.75" />
-        <EntityTypeShape EntityType="School.Course_Roster" Width="1.5" PointX="8.25" PointY="27.75" />
+        <EntityTypeShape EntityType="School.Course_Roster" Width="1.5" PointX="7.625" PointY="27.5" />
         <EntityTypeShape EntityType="School.Course_Time" Width="1.5" PointX="5.25" PointY="30.375" />
         <EntityTypeShape EntityType="School.Course_Times_Menu" Width="1.5" PointX="11.75" PointY="9.75" />
         <EntityTypeShape EntityType="School.coursearchive" Width="1.5" PointX="12.75" PointY="0.75" />
@@ -58,9 +58,9 @@
         <EntityTypeShape EntityType="School.Material" Width="1.5" PointX="2.75" PointY="20.75" />
         <EntityTypeShape EntityType="School.NavLink" Width="1.5" PointX="4.75" PointY="20.75" />
         <EntityTypeShape EntityType="School.NEWEMP" Width="1.5" PointX="10.75" PointY="22.75" />
-        <EntityTypeShape EntityType="School.OptionalInfo" Width="1.5" PointX="23.75" PointY="14.625" />
+        <EntityTypeShape EntityType="School.OptionalInfo" Width="1.5" PointX="23.75" PointY="25.375" />
         <EntityTypeShape EntityType="School.OrderInProgress" Width="1.5" PointX="5.75" PointY="23.75" />
-        <EntityTypeShape EntityType="School.OrderTransaction" Width="1.5" PointX="23.75" PointY="18.75" />
+        <EntityTypeShape EntityType="School.OrderTransaction" Width="1.5" PointX="29.75" PointY="22.875" />
         <EntityTypeShape EntityType="School.ParentLevelOne" Width="1.5" PointX="23.75" PointY="22.75" />
         <EntityTypeShape EntityType="School.ParentLevelThree" Width="1.5" PointX="15.75" PointY="24.75" />
         <EntityTypeShape EntityType="School.ParentLevelTwo" Width="1.5" PointX="25.75" PointY="0.75" />
@@ -136,7 +136,7 @@
         <AssociationConnector Association="School.Fk_MainCategories_SubSubCategories_MainCategoryID" />
         <EntityTypeShape EntityType="School.CourseExtraParticipant" Width="1.5" PointX="10.5" PointY="45.75" />
         <AssociationConnector Association="School.Fk_CourseRoster_CourseExtraParticipant_RosterId" />
-        <EntityTypeShape EntityType="School.SupervisorStudent" Width="1.5" PointX="32.375" PointY="22.75" />
+        <EntityTypeShape EntityType="School.SupervisorStudent" Width="1.5" PointX="23.5" PointY="29.375" />
         <EntityTypeShape EntityType="School.Membership" Width="1.5" PointX="8.4275630286091765" PointY="29.937641411059371" />
         <EntityTypeShape EntityType="School.Membership_Roster" Width="1.5" PointX="6.9104550829671574" PointY="5.6800355937704605" />
         <EntityTypeShape EntityType="School.ReviewOrderView" Width="1.5" PointX="2.2033045581557342" PointY="6.1608993886787911" />

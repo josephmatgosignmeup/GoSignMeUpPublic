@@ -174,7 +174,8 @@ namespace Gsmu.Api.Data.School.Entities
         public string EnrollToWaitListConfig { get; set; }
         public Nullable<int> canvas_skip { get; set; }
         public string clubpilatespackageinstallmentdetails { get; set; }
-    
+        public string blackboard_roster_id { get; set; }
+
         public virtual ICollection<AttendanceDetail> AttendanceDetails { get; set; }
         public virtual Course Cours { get; set; }
         public virtual Student Student { get; set; }

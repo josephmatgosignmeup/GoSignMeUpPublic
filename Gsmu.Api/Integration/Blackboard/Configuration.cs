@@ -178,6 +178,28 @@ namespace Gsmu.Api.Integration.Blackboard
             }
         }
 
+        public string BlackboardAccessToken
+        {
+            get
+            {
+                return Settings.Instance.GetMasterInfo4().blackboard_access_token;
+            }
+            set
+            {
+                Settings.Instance.GetMasterInfo4().blackboard_access_token = value;
+            }
+        }
+
+        public DateTime BlackboardAccessTokenExpiry
+        {
+           get
+           {
+                var value = Settings.Instance.GetMasterInfo4().blackboard_token_expiry ?? DateTime.MinValue;
+                    return value;
+           }
+
+        }
+
         public string BlackBoardSecurityKey
         {
             get

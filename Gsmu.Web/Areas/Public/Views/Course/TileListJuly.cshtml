@@ -219,7 +219,7 @@ else
         });
     </script>
 
-    
+
     counter = 0;
     foreach (var courseModel in Model.Result)
     {
@@ -227,6 +227,7 @@ else
         var course = courseModel.Course;
         var courseId = courseModel.CourseId;
         var backgroundStyle = string.Empty;
+        var colorBar = string.Empty;
         var courseStart = courseModel.CourseStartAsDate;
         var courseEnd = courseModel.CourseEndAsDate;
         var courseStartEndTimeDisplay = (courseModel.Course.StartEndTimeDisplay != null ? courseModel.Course.StartEndTimeDisplay.Trim() : string.Empty);
@@ -242,7 +243,14 @@ else
             {
                 if (colorcode.CourseCategoryID == course.CourseColorGrouping)
                 {
-                    backgroundStyle = string.Format("background-color:#" + colorcode.CourseCategoryColor + ";");
+                    if (colorcode.UseColorBar == 1)
+                    {
+                        colorBar = "width:100%;height:30px; background-color:#"+ colorcode.CourseCategoryColor;
+                    }
+                    else
+                    {
+                        backgroundStyle = string.Format("background-color:#" + colorcode.CourseCategoryColor + ";");
+                    }
                 }
             }
         }
@@ -543,6 +551,7 @@ else
 
                 <div class="tile-july-main-data">
                     <div class="tile-july-coursename">
+                        <div style="@colorBar">&nbsp;</div>
                         <a href="javascript:window.CourseSearchInstance.ShowCourseDetails(@course.COURSEID);">@Html.Raw(course.COURSENAME)</a>
                     @if (config.Icons)
                     {

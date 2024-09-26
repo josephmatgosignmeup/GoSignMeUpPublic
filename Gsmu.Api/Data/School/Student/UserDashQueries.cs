@@ -14,6 +14,9 @@ using Gsmu.Api.Integration.Blackboard;
 using blackboard = Gsmu.Api.Integration.Blackboard;
 using canvas = Gsmu.Api.Integration.Canvas;
 using Gsmu.Api.Data.ViewModels.Grid;
+using BlackBoardAPI;
+using static BlackBoardAPI.BlackBoardAPIModel;
+using System.Web.Script.Serialization;
 
 namespace Gsmu.Api.Data.School.Student
 {
@@ -234,6 +237,7 @@ namespace Gsmu.Api.Data.School.Student
                 EmailEntity.EmailCC = Student.additionalemail.ToString();
             }
             EmailEntity.EmailSubject = subject;
+            EmailEntity.AuditProcess = "Public Reset Pass";
             EmailEntity.AuditDate = DateTime.Now;
             EmailFunction.SendEmail(EmailEntity);
 
@@ -376,22 +380,46 @@ namespace Gsmu.Api.Data.School.Student
                         var bbConfig = Configuration.Instance;
                         if (bbConfig.BlackboardRealtimeStudentSyncEnabled)
                         {
-                            var checkUserExist = blackboard.Connector.UserConnector.SeachUserByFields("", username);
-                            if (checkUserExist.IsSuccess)
+                            if (Configuration.Instance.BlackboardUseAPI)
                             {
-                                var userResult = blackboard.Connector.UserConnector.UpdateBBUserAccount(username, firstpassword,"","","","",0,0,0);
-                                if (userResult.IsSuccess)
+                                BlackboardAPIRequestHandler handelr = new BlackboardAPIRequestHandler();
+                                var jsonToken = AuthorizationHelper.getCurrentBBAccessToken();
+                                var user = handelr.GetUserDetails(Configuration.Instance.BlackBoardSecretKey, Configuration.Instance.BlackBoardSecurityKey, "", Configuration.Instance.BlackboardConnectionUrl, student.USERNAME, "", "", jsonToken);
+
+                                if (user.userName != null)
                                 {
-                                    return "successupdate";
+                                    BBUser user_update = new BBUser();
+                                    user_update.password = firstpassword;
+                                    BBRespUserProfile updateduser = handelr.UpdateExisitingUser(Configuration.Instance.BlackBoardSecretKey, Configuration.Instance.BlackBoardSecurityKey, "", Configuration.Instance.BlackboardConnectionUrl, user_update, user.userName, "", "", jsonToken, "");
+                                    if (updateduser.responseMessage.IndexOf("True") >= 0)
+                                    {
+                                        return "successupdate";
+                                    }
+                                    else
+                                    {
+                                        return "successupdatepartial";
+                                    }
+                                }
+                            }
+                            else
+                            { 
+                                var checkUserExist = blackboard.Connector.UserConnector.SeachUserByFields("", username);
+                                if (checkUserExist.IsSuccess)
+                                {
+                                    var userResult = blackboard.Connector.UserConnector.UpdateBBUserAccount(username, firstpassword, "", "", "", "", 0, 0, 0);
+                                    if (userResult.IsSuccess)
+                                    {
+                                        return "successupdate";
+                                    }
+                                    else
+                                    {
+                                        return "successupdatepartial";
+                                    }
                                 }
                                 else
                                 {
                                     return "successupdatepartial";
                                 }
-                            }
-                            else
-                            {
-                                return "successupdatepartial";
                             }
                         }
                         else

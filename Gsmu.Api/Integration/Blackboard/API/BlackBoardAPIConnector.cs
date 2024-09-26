@@ -39,9 +39,7 @@ namespace Gsmu.Api.Integration.Blackboard.API
         public static void UpdateExistingBBUser(BBUser bbUser)
         {
             BlackboardAPIRequestHandler handelr = new BlackboardAPIRequestHandler();
-            BBToken BBToken = new BBToken();
-            BBToken = handelr.GenerateAccessToken(Configuration.Instance.BlackBoardSecretKey, Configuration.Instance.BlackBoardSecurityKey, "", Configuration.Instance.BlackboardConnectionUrl);
-            var jsonToken = new JavaScriptSerializer().Serialize(BBToken);
+            var jsonToken = Gsmu.Api.Authorization.AuthorizationHelper.getCurrentBBAccessToken();
             BBUser user = new BBUser();
             BBRespUserProfile testuser = handelr.UpdateExisitingUser(Configuration.Instance.BlackBoardSecretKey, Configuration.Instance.BlackBoardSecurityKey, "", Configuration.Instance.BlackboardConnectionUrl, user, "", jsonToken, "");
 

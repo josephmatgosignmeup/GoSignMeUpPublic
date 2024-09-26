@@ -18,5 +18,6 @@ namespace Gsmu.Api.Data.School.Entities
         public string CourseCategoryColor { get; set; }
         public string CourseCategoryName { get; set; }
         public short registrationlimit { get; set; }
+        public int UseColorBar { get; set; }
     }
 }

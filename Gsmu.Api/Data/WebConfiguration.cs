@@ -749,6 +749,21 @@ namespace Gsmu.Api.Data
                 }
             }
         }
+        public static bool RequiredReferrerCheck
+        {
+            get
+            {
+                string value = ConfigurationManager.AppSettings["RequiredReferrerCheck"];
+                if (string.IsNullOrEmpty(value) || value.ToLower() == "false")
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
 
         public static int IsAdvance
         {
