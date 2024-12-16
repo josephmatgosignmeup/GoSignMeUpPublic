@@ -31,7 +31,7 @@
     if(String.IsNullOrEmpty(ViewBag.NoCancelMessage)){showcancelmessage = false;}
     int allowcancelOnlyNotPaid = ViewBag.AllowCourseCancelOnPaymentStatus == null ? 0 : ViewBag.AllowCourseCancelOnPaymentStatus;
     string transcriptnetUrl = Settings.Instance.GetMasterInfo4().AspSiteRootUrl +"/students_transcriptnet.asp?sid=" + (usr != null ? usr.userid : 0); 
-    string WidgtHeight = (Settings.Instance.GetMasterInfo3().AllowPartialPayment == 1) ? "270" : "180";
+    string WidgtHeight = ViewBag.UserCoursesHeight;
     var hide_payment_info = Settings.Instance.GetMasterInfo2().HidePaymentInfo;
     string PubDateFormatWidth =  (Settings.Instance.GetMasterInfo2().usePubDateFormat==1 ? "110" : "75");
     string jsPubDateFormat = Settings.Instance.GetJsPubDateFormat();

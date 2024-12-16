@@ -302,6 +302,7 @@ namespace Gsmu.Web.Areas.Public.Controllers
             ViewBag.cmd = cmd;
             ViewBag.AllowMultiEnroll = Settings.Instance.GetMasterInfo2().AllowStudentMultiEnroll;
             ViewBag.MultipleSignUp = Settings.Instance.GetMasterInfo3().restrictStudentMultiSignup;
+            ViewBag.UserCoursesHeight = WebConfiguration.UserCoursesHeight;
             ViewBag.CancelCourseDateReached = true;
             ViewBag.AllowCourseCancelOnPaymentStatus = Settings.Instance.GetMasterInfo3().allowcancelOnlyNotPaid;
             UserModel ui = new UserModel(usergroup, cmd, userid_fromSupervisor);
